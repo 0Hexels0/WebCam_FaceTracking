@@ -75,7 +75,7 @@ Kamera görüntüsü → Yüz tespiti → Merkeze göre ofset hesabı
 | Sinyal | GPIO22 (fiziksel pin 15) |
 | VCC / GND | Pi 5V / GND |
 
-<img width="794" height="500" alt="image" 
+<img width="794" height="500" alt="image">
 
 > **Neden önemli:** Metal dişli servolar kalkışta yüksek akım çeker. Bu
 > akım Pi'nin 5V pininden karşılanamaz ve Pi resetlenir/bozulabilir.
