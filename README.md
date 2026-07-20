@@ -4,7 +4,7 @@ Webcam Face Tracking project featuring pan-tilt movement that follows your face 
 
 
 
-<img width="200" height="356" alt="face" src="https://github.com/user-attachments/assets/9e2bb505-77fb-4e5f-9a28-25349ae3b202" />  <img width="794" height="500" alt="image" src="https://github.com/user-attachments/assets/fc5b7017-1bd3-4176-bcbb-99829a577830" />
+<img width="200" height="356" alt="face" src="https://github.com/user-attachments/assets/9e2bb505-77fb-4e5f-9a28-25349ae3b202" />  src="https://github.com/user-attachments/assets/fc5b7017-1bd3-4176-bcbb-99829a577830" />
 
 
 # 🎯 Yüz Takip Eden Pan-Tilt Lazer Taret (Raspberry Pi 4B)
@@ -74,6 +74,8 @@ Kamera görüntüsü → Yüz tespiti → Merkeze göre ofset hesabı
 |---|---|
 | Sinyal | GPIO22 (fiziksel pin 15) |
 | VCC / GND | Pi 5V / GND |
+
+<img width="794" height="500" alt="image" 
 
 > **Neden önemli:** Metal dişli servolar kalkışta yüksek akım çeker. Bu
 > akım Pi'nin 5V pininden karşılanamaz ve Pi resetlenir/bozulabilir.
