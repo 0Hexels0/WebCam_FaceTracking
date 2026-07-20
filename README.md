@@ -7,183 +7,185 @@ Webcam Face Tracking project featuring pan-tilt movement that follows your face 
 <img width="200" height="356" alt="face" src="https://github.com/user-attachments/assets/9e2bb505-77fb-4e5f-9a28-25349ae3b202" />
 
 
-# 🎯 Yüz Takip Eden Pan-Tilt Lazer Taret (Raspberry Pi 4B)
+# 🎯 Face-Tracking Pan-Tilt Laser Turret (Raspberry Pi 4B)
 
-Raspberry Pi 4B, USB webcam, PCA9685 servo sürücü kartı ve 2 eksenli
-(pan-tilt) metal dişli servo kullanarak, gördüğü yüzü gerçek zamanlı
-takip eden ve yüz merkeze geldiğinde lazer ile işaretleyen bir taret
-projesi.
+A turret project that uses a Raspberry Pi 4B, a USB webcam, a PCA9685
+servo driver board, and a 2-axis (pan-tilt) metal-gear servo setup to
+track a detected face in real time, and triggers a laser once the face
+is centered.
 
-> ⚠️ Bu proje eğitim/hobi amaçlıdır. Lazer modülü olarak yalnızca düşük
-> güçlü (5mW altı) göz için güvenli lazer modülleri kullanın ve projeyi
-> her zaman gözetim altında test edin.
+> ⚠️ This project is for educational/hobby purposes. Only use a
+> low-power (under 5mW) eye-safe laser module, and always test the
+> project under supervision.
 
-## Özellikler
+## Features
 
-- OpenCV Haar Cascade ile gerçek zamanlı yüz tespiti
-- PCA9685 üzerinden I2C ile hassas, titremesiz servo kontrolü
-- Yüz konumuna göre kademeli (P-kontrolcü mantığıyla) pan/tilt takibi —
-  ani sıçrama yapmaz, webcam'in sabit olmadığı durumlarda da stabil çalışır
-- Yüz görüntü merkezine yeterince yaklaşınca otomatik lazer tetikleme
-- Webcam bağlantısı koparsa otomatik yeniden bağlanma
+- Real-time face detection using OpenCV Haar Cascade
+- Precise, jitter-free servo control over I2C via the PCA9685
+- Incremental (proportional/P-controller style) pan/tilt tracking based
+  on face position — no sudden jumps, and it stays stable even though
+  the webcam isn't assumed to be fixed in place
+- Automatic laser trigger once the face is close enough to the image center
+- Automatic webcam reconnection if the connection drops
 
-## Demo Mantığı
+## How It Works
 
 ```
-Kamera görüntüsü → Yüz tespiti → Merkeze göre ofset hesabı
-        → Pan/Tilt servo düzeltmesi → Ofset yeterince küçükse lazer AÇIK
+Camera frame → Face detection → Offset from center calculated
+        → Pan/Tilt servo correction → Laser ON if offset is small enough
 ```
 
-## 📦 Malzeme Listesi (BOM)
+## 📦 Bill of Materials (BOM)
 
-| # | Parça | Not |
+| # | Part | Notes |
 |---|---|---|
-| 1 | Raspberry Pi 4B | Herhangi bir RAM seçeneği yeterli |
-| 2 | USB Webcam | Herhangi bir UVC uyumlu webcam |
-| 3 | PCA9685 16 kanal servo sürücü kartı | I2C ile Pi'ye bağlanır |
-| 4 | 2x Metal dişli servo (ör. MG90S / MG996R) | Pan ve tilt için |
-| 5 | Pan-Tilt bracket kiti | 2 eksenli, kamera + lazer taşıyacak |
-| 6 | Lazer diyot modülü (ör. KY-008) | **5mW altı**, göz güvenliği için |
-| 7 | Harici 5V/6V güç kaynağı (2-3A+) | **Servolar için zorunlu**, Pi'den beslenmez |
-| 8 | Breadboard + jumper kablolar | |
-| 9 | microSD kart (Raspberry Pi OS kurulu) | |
+| 1 | Raspberry Pi 4B | Any RAM variant works |
+| 2 | USB Webcam | Any UVC-compatible webcam |
+| 3 | PCA9685 16-channel servo driver board | Connects to the Pi via I2C |
+| 4 | 2x Metal-gear servo (e.g. MG90S / MG996R) | For pan and tilt |
+| 5 | Pan-Tilt bracket kit | 2-axis, holds the camera + laser |
+| 6 | Laser diode module (e.g. KY-008) | **Under 5mW**, for eye safety |
+| 7 | External 5V/6V power supply (2-3A+) | **Required for the servos**, don't power them from the Pi |
+| 8 | Breadboard + jumper wires | |
+| 9 | microSD card (with Raspberry Pi OS installed) | |
 
-## 🔌 Bağlantı Şeması
+## 🔌 Wiring Diagram
 
 ### Raspberry Pi ↔ PCA9685 (I2C)
 
 | PCA9685 Pin | Raspberry Pi Pin |
 |---|---|
-| VCC (mantık) | Pi 3.3V (pin 1) |
+| VCC (logic) | Pi 3.3V (pin 1) |
 | GND | Pi GND (pin 6) |
 | SDA | Pi GPIO2 / SDA (pin 3) |
 | SCL | Pi GPIO3 / SCL (pin 5) |
 
-### PCA9685 ↔ Servolar / Güç
+### PCA9685 ↔ Servos / Power
 
-| Bağlantı | Nereye |
+| Connection | To |
 |---|---|
-| Pan servo | PCA9685 kanal **0** |
-| Tilt servo | PCA9685 kanal **1** |
-| PCA9685 **V+** terminali | Harici 5V/6V güç kaynağı |
-| PCA9685 GND (güç tarafı) | Harici kaynağın GND'si + Pi GND'si (**ortak toprak şart**) |
+| Pan servo | PCA9685 channel **0** |
+| Tilt servo | PCA9685 channel **1** |
+| PCA9685 **V+** terminal | External 5V/6V power supply |
+| PCA9685 GND (power side) | External supply GND + Pi GND (**common ground required**) |
 
-### Lazer
+### Laser
 
-| Lazer Pin | Raspberry Pi Pin |
+| Laser Pin | Raspberry Pi Pin |
 |---|---|
-| Sinyal | GPIO22 (fiziksel pin 15) |
+| Signal | GPIO22 (physical pin 15) |
 | VCC / GND | Pi 5V / GND |
 
-<img width="600" height="320" alt="image" src="https://github.com/user-attachments/assets/cb6f3f19-ad1b-4a5a-9dfd-f81fe12f2687" />
+<img width="600" height="320" alt="image" src="https://github.com/user-attachments/assets/0e1efb9f-91cd-43b6-b9c2-a05e3c5120a9" />
 
-> **Neden önemli:** Metal dişli servolar kalkışta yüksek akım çeker. Bu
-> akım Pi'nin 5V pininden karşılanamaz ve Pi resetlenir/bozulabilir.
-> Servoları PCA9685 üzerinden mutlaka **harici** bir güç kaynağıyla besleyin
-> ve tüm GND hatlarını ortaklayın.
 
-## 🛠️ Kurulum
+> **Why this matters:** Metal-gear servos draw significant current on
+> startup. The Pi's 5V pin cannot supply this current, and doing so can
+> reset or damage the Pi. Always power the servos through the PCA9685
+> from an **external** power supply, and tie all GND lines together.
 
-### 1. Sistem paketleri
+## 🛠️ Installation
+
+### 1. System packages
 
 ```bash
 sudo apt update
 sudo apt install -y python3-opencv python3-pip python3-rpi.gpio i2c-tools git
 ```
 
-### 2. I2C'yi etkinleştir
+### 2. Enable I2C
 
 ```bash
 sudo raspi-config
 ```
-`Interface Options` → `I2C` → `Enable` → Pi'yi yeniden başlat.
+`Interface Options` → `I2C` → `Enable` → reboot the Pi.
 
-Bağlantıyı doğrula:
+Verify the connection:
 
 ```bash
 i2cdetect -y 1
 ```
 
-PCA9685 genelde **0x40** adresinde görünmelidir.
+The PCA9685 should typically appear at address **0x40**.
 
-### 3. Repoyu klonla
+### 3. Clone the repo
 
 ```bash
-git clone https://github.com/<kullanici-adiniz>/<repo-adi>.git
-cd <repo-adi>
+git clone https://github.com/<your-username>/<repo-name>.git
+cd <repo-name>
 ```
 
-### 4. Python bağımlılıklarını kur
+### 4. Install Python dependencies
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-> Raspberry Pi OS'un yeni sürümlerinde (Bookworm) `pip3 install` komutu
-> "externally managed environment" hatası verirse:
+> On newer Raspberry Pi OS versions (Bookworm), `pip3 install` may fail
+> with an "externally managed environment" error. In that case, use:
 > ```bash
 > pip3 install -r requirements.txt --break-system-packages
 > ```
-> ya da bir sanal ortam (`python3 -m venv venv`) kullanın.
+> or set up a virtual environment (`python3 -m venv venv`).
 
-### 5. Çalıştır
+### 5. Run it
 
 ```bash
 python3 src/face_tracking_turret.py
 ```
 
-Çıkmak için görüntü penceresindeyken `q` tuşuna basın.
+Press `q` while the video window is focused to quit.
 
-## ⚙️ Kütüphaneler
+## ⚙️ Libraries
 
-| Kütüphane | Amaç |
+| Library | Purpose |
 |---|---|
-| `opencv-python` (veya `python3-opencv`) | Kameradan görüntü alma, yüz tespiti |
-| `adafruit-circuitpython-servokit` | PCA9685'i I2C üzerinden derece cinsinden kontrol etmek için |
-| `adafruit-blinka` | Adafruit CircuitPython kütüphanelerinin Raspberry Pi'de çalışmasını sağlayan uyumluluk katmanı |
-| `RPi.GPIO` | Lazer modülünü doğrudan GPIO üzerinden sürmek için |
+| `opencv-python` (or `python3-opencv`) | Capturing frames from the camera, face detection |
+| `adafruit-circuitpython-servokit` | Controlling the PCA9685 over I2C using simple degree-based angles |
+| `adafruit-blinka` | Compatibility layer that lets Adafruit CircuitPython libraries run on the Raspberry Pi |
+| `RPi.GPIO` | Driving the laser module directly through a GPIO pin |
 
-## 🔧 İnce Ayar
+## 🔧 Tuning
 
-Kod içindeki (`src/face_tracking_turret.py`) şu parametrelerle oynayabilirsiniz:
+You can tweak the following parameters in `src/face_tracking_turret.py`:
 
-| Değişken | Ne işe yarar |
+| Variable | What it does |
 |---|---|
-| `DEADZONE_PX` | Yüz merkeze bu kadar piksel yakınsa hareket etmez (titremeyi önler) |
-| `STEP_GAIN` | Piksel başına kaç derece dönüleceği (hassasiyet) |
-| `MAX_STEP_DEG` | Tek karede maksimum açı değişimi (ani sıçramayı önler) |
-| `LASER_TRIGGER_RADIUS` | Lazerin tetiklenmesi için yüzün merkeze ne kadar yakın olması gerektiği |
-| `kit.servo[...].set_pulse_width_range(...)` | Servonuzun darbe genişliği aralığı standarttan farklıysa buradan ayarlayın |
+| `DEADZONE_PX` | If the face is within this many pixels of center, don't move (prevents jitter) |
+| `STEP_GAIN` | Degrees of movement per pixel of offset (sensitivity) |
+| `MAX_STEP_DEG` | Maximum angle change per frame (prevents sudden jumps) |
+| `LASER_TRIGGER_RADIUS` | How close to center the face must be for the laser to trigger |
+| `kit.servo[...].set_pulse_width_range(...)` | Adjust this if your servo's pulse-width range differs from the default |
 
-## 🩺 Sorun Giderme
+## 🩺 Troubleshooting
 
-| Sorun | Çözüm |
+| Issue | Fix |
 |---|---|
-| Servo uç noktalarda titriyor/gitmiyor | `set_pulse_width_range()` değerlerini servonuzun datasheet'ine göre ayarlayın |
-| Servo ters yöne dönüyor | Kod içinde `PAN`/`TILT` bloklarındaki `+`/`-` işaretini değiştirin |
-| `i2cdetect` PCA9685'i göstermiyor | I2C'nin etkin olduğundan ve kabloların doğru olduğundan emin olun |
-| Pi, servo hareket edince resetleniyor | Servoları harici güçten beslediğinizden ve GND'lerin ortak olduğundan emin olun |
-| Webcam bağlantısı kopuyor | Kod otomatik yeniden bağlanır; USB kablosunu/hub'ı kontrol edin |
-| Yüz tespiti zayıf | Ortam ışığını artırın; gerekirse Haar Cascade yerine DNN tabanlı tespite geçin |
+| Servo jitters or won't reach the end of its range | Adjust `set_pulse_width_range()` values to match your servo's datasheet |
+| Servo moves in the wrong direction | Flip the `+`/`-` sign in the `PAN`/`TILT` blocks in the code |
+| `i2cdetect` doesn't show the PCA9685 | Make sure I2C is enabled and the wiring is correct |
+| Pi resets when the servos move | Make sure the servos are powered externally and all GNDs are common |
+| Webcam connection keeps dropping | The code will auto-reconnect; check your USB cable/hub |
+| Poor face detection | Improve lighting, or switch from Haar Cascade to a DNN-based detector |
 
-## 📁 Repo Yapısı
+## 📁 Repo Structure
 
 ```
 .
 ├── src/
-│   └── face_tracking_turret.py   # Ana çalıştırılabilir kod
-├── requirements.txt              # Python bağımlılıkları
+│   └── face_tracking_turret.py   # Main executable script
+├── requirements.txt              # Python dependencies
 ├── LICENSE
 └── README.md
 ```
 
-## ⚠️ Güvenlik Notu
+## ⚠️ Safety Note
 
-Bu proje insan yüzüne yönelen bir lazer barındırır. Yalnızca düşük güçlü
-(5mW altı), göz için güvenli sınıfta (Class 1/2) lazer modülleri kullanın.
-Projeyi asla gözetimsiz bırakmayın ve başkalarının doğrudan lazer ışığına
-uzun süre bakmasına izin vermeyin.
+This project includes a laser aimed at a human face. Only use a
+low-power (under 5mW), eye-safe class (Class 1/2) laser module. Never
+leave the project unattended, and don't let anyone stare directly into
+the laser for an extended period.
 
-## Lisans
+## License
 
-Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
+This project is licensed under the [MIT License](LICENSE).
