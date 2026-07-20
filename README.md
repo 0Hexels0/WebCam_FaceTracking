@@ -46,8 +46,9 @@ Camera frame → Face detection → Offset from center calculated
 | 5 | Pan-Tilt bracket kit | 2-axis, holds the camera + laser |
 | 6 | Laser diode module (e.g. KY-008) | **Under 5mW**, for eye safety |
 | 7 | External 5V/6V power supply (2-3A+) | **Required for the servos**, don't power them from the Pi |
-| 8 | Breadboard + jumper wires | |
-| 9 | microSD card (with Raspberry Pi OS installed) | |
+| 8 | LOGITECH C270 HD 720p WebCam | |
+| 9 | Breadboard + jumper wires | |
+| 10 | microSD card (with Raspberry Pi OS installed) | |
 
 ## 🔌 Wiring Diagram
 
